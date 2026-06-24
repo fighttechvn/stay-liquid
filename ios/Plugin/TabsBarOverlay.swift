@@ -1,5 +1,17 @@
 import UIKit
 
+/// Returns an SF Symbol image, guarded for the iOS 12.0 deployment target.
+/// SF Symbols (`UIImage(systemName:)`) are iOS 13+. The native bar is only ever
+/// used on iOS 26 (see TabsBarPlugin.available), so the pre-13 branch just needs
+/// to compile — it never runs in practice. Free function so it can be called
+/// from `[weak self]` closures without an explicit `self`.
+private func sfSymbol(_ name: String) -> UIImage {
+    if #available(iOS 13.0, *) {
+        return UIImage(systemName: name) ?? UIImage()
+    }
+    return UIImage()
+}
+
 /// Represents an image icon configuration
 struct ImageIcon {
     /// Shape of the icon container ("circle" or "square")
@@ -585,17 +597,6 @@ final class TabsBarOverlay: UIViewController, UITabBarDelegate {
         if let unselectedColor = unselectedIconColor {
             tabBar.unselectedItemTintColor = unselectedColor
         }
-    }
-
-    /// Returns an SF Symbol image, guarded for the iOS 12.0 deployment target.
-    /// SF Symbols (`UIImage(systemName:)`) are iOS 13+. The native bar is only
-    /// ever used on iOS 26 (see TabsBarPlugin.available), so the pre-13 branch
-    /// just needs to compile — it never runs in practice.
-    private func sfSymbol(_ name: String) -> UIImage {
-        if #available(iOS 13.0, *) {
-            return UIImage(systemName: name) ?? UIImage()
-        }
-        return UIImage()
     }
 
     // MARK: UITabBarDelegate
