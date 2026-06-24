@@ -631,6 +631,18 @@ public class TabsBarPlugin: CAPPlugin {
         }
     }
 
+    /// Reports whether the native Liquid Glass tab bar is available.
+    /// UITabBar only adopts the Liquid Glass material on iOS 26+, so callers
+    /// use this to decide between the native bar and a web fallback.
+    /// - Parameter call: The Capacitor plugin call
+    @objc func available(_ call: CAPPluginCall) {
+        if #available(iOS 26.0, *) {
+            call.resolve(["available": true])
+        } else {
+            call.resolve(["available": false])
+        }
+    }
+
     /// Ensures the overlay view controller is created and properly configured
     private func ensureOverlay() {
         guard overlayVC == nil else { return }

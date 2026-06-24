@@ -66,6 +66,15 @@ interface TabsBarPlugin {
     select(options: SelectOptions): Promise<void>;
     setBadge(options: SetBadgeOptions): Promise<void>;
     getSafeAreaInsets(): Promise<SafeAreaInsets>;
+    /**
+     * Whether the native Liquid Glass tab bar is available on this device.
+     * `available` is true only on iOS 26+ (where UITabBar adopts Liquid Glass);
+     * false on older iOS, Android, and the web. Use it to decide between the
+     * native bar and a web fallback.
+     */
+    available(): Promise<{
+        available: boolean;
+    }>;
     /** Fires when user taps a tab */
     addListener(eventName: "selected", listenerFunc: (ev: {
         id: string;

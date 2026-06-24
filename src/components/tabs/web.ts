@@ -275,4 +275,9 @@ export class TabsBarWeb extends WebPlugin implements TabsBarPlugin {
   async getSafeAreaInsets(): Promise<SafeAreaInsets> {
     return { top: 0, bottom: 0, left: 0, right: 0 };
   }
+
+  async available(): Promise<{ available: boolean }> {
+    // The web never has the native Liquid Glass material.
+    return { available: false };
+  }
 }

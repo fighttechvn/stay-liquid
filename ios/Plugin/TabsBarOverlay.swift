@@ -163,7 +163,7 @@ final class TabsBarOverlay: UIViewController, UITabBarDelegate {
                       tabBarItem.selectedImage = selectedImage.withRenderingMode(.alwaysOriginal)
                   } else {
                       // Fallback to systemIcon if imageIcon fails
-                      tabBarItem.image = UIImage(systemName: model.systemIcon) ?? UIImage()
+                      tabBarItem.image = sfSymbol(model.systemIcon)
                   }
               }
           }
@@ -171,7 +171,7 @@ final class TabsBarOverlay: UIViewController, UITabBarDelegate {
       }
       
       // Priority 2: systemIcon (SF Symbols) - now compulsory
-      let image = UIImage(systemName: model.systemIcon) ?? UIImage()
+      let image = sfSymbol(model.systemIcon)
       tabBarItem.image = image
       return
   }
@@ -182,7 +182,7 @@ final class TabsBarOverlay: UIViewController, UITabBarDelegate {
   ///   - tabBarItem: The UITabBarItem to update
   func loadFallbackImage(for model: TabsBarItem, tabBarItem: UITabBarItem) {
       // systemIcon is now compulsory, so it's always the fallback
-      tabBarItem.image = UIImage(systemName: model.systemIcon) ?? UIImage()
+      tabBarItem.image = sfSymbol(model.systemIcon)
   }
   
   /// Loads an image icon using the ImageUtils
@@ -585,6 +585,17 @@ final class TabsBarOverlay: UIViewController, UITabBarDelegate {
         if let unselectedColor = unselectedIconColor {
             tabBar.unselectedItemTintColor = unselectedColor
         }
+    }
+
+    /// Returns an SF Symbol image, guarded for the iOS 12.0 deployment target.
+    /// SF Symbols (`UIImage(systemName:)`) are iOS 13+. The native bar is only
+    /// ever used on iOS 26 (see TabsBarPlugin.available), so the pre-13 branch
+    /// just needs to compile — it never runs in practice.
+    private func sfSymbol(_ name: String) -> UIImage {
+        if #available(iOS 13.0, *) {
+            return UIImage(systemName: name) ?? UIImage()
+        }
+        return UIImage()
     }
 
     // MARK: UITabBarDelegate
