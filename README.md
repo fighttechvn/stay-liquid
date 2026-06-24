@@ -10,6 +10,14 @@ The first component available is the Tab Navigation bar, but over time we will e
 
 ![](https://64.media.tumblr.com/2d8b0c258b8ec61704001da74fbd99e0/4b167236fab79c9f-17/s640x960/9cebc10ca65f9404f49721c864c90165006390f4.gif)
 
+### 📸 Live screenshot
+
+Below is the bundled [`example`](example/) app running on an iPhone 17 Pro Max (iOS 26). The bar at the bottom is a real native `UITabBar` rendering Liquid Glass on top of the Capacitor webview — notice the colourful content refracting through the glass as it scrolls underneath.
+
+<p align="center">
+  <img src="docs/screenshot-tabbar.png" alt="Stay Liquid native Liquid Glass tab bar running in the example app on iOS 26" width="320" />
+</p>
+
 ## 📦 Installation
 
 We’re not on npm (yet) but you can still install from GitHub using npm.
@@ -360,6 +368,36 @@ await TabsBar.configure({
 4. **Consider loading states**: Images load asynchronously, so fallbacks are shown initially
 5. **Test error scenarios**: Verify behavior with invalid URLs or network failures
 6. **Cache considerations**: Remote images are cached, so updates may require cache clearing
+
+## 🧪 Running the example app
+
+A minimal Capacitor demo lives in [`example/`](example/). It loads a colourful scrolling page and calls `TabsBar.configure(...)` to render the native Liquid Glass bar — this is exactly what produced the screenshot above.
+
+```bash
+# From the repo root: build the plugin first
+npm install && npm run build
+
+# Then build and run the demo
+cd example
+npm install
+npx cap sync ios
+
+# Open in Xcode and run on an iOS 26 simulator/device...
+npx cap open ios
+```
+
+Or build straight from the command line onto a booted iOS 26 simulator:
+
+```bash
+cd example/ios/App
+xcodebuild -workspace App.xcworkspace -scheme App \
+  -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+  -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
+xcrun simctl install booted build/Build/Products/Debug-iphonesimulator/App.app
+xcrun simctl launch booted vn.fighttech.stayliquid.example
+```
+
+> The native Liquid Glass styling only appears on **iOS 26+**. On the web or older iOS the app falls back to your normal Ionic/Capacitor tabs.
 
 ## 🔜 Contributing and Further Developments
 

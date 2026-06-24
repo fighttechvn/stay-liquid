@@ -1,0 +1,15 @@
+{
+  "name": "stay-liquid-example",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Demo app for the Stay Liquid native Liquid Glass tab bar plugin.",
+  "dependencies": {
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/device": "^6.0.0",
+    "@capacitor/ios": "^6.0.0",
+    "stay-liquid": "file:.."
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.0.0"
+  }
+}

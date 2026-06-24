@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Capacitor copied web assets / generated config
+ios/App/App/public/
+ios/App/App/capacitor.config.json
+ios/App/capacitor-cordova-ios-plugins/
+
+# CocoaPods
+ios/App/Pods/
+
+# Xcode build output
+ios/App/build/
+ios/App/DerivedData/
+*.xcuserstate
+xcuserdata/

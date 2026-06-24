@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Stay Liquid</title>
+  <style>
+    :root { color-scheme: light dark; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { margin: 0; height: 100%; font-family: -apple-system, system-ui, sans-serif; }
+    body {
+      background: linear-gradient(160deg, #ff7e5f 0%, #feb47b 28%, #6a82fb 64%, #5f2c82 100%);
+      color: #fff;
+      -webkit-font-smoothing: antialiased;
+    }
+    .scroll { height: 100%; overflow-y: auto; padding: calc(env(safe-area-inset-top) + 24px) 20px 140px; }
+    h1 { font-size: 34px; font-weight: 800; margin: 4px 0 2px; letter-spacing: -0.5px; }
+    .sub { opacity: 0.85; margin: 0 0 24px; font-size: 15px; }
+    .card {
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 22px;
+      padding: 20px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+    .card h2 { margin: 0 0 6px; font-size: 19px; }
+    .card p { margin: 0; opacity: 0.9; font-size: 14px; line-height: 1.5; }
+    .pill { display: inline-block; background: rgba(0,0,0,0.22); border-radius: 999px; padding: 5px 12px; font-size: 12px; margin: 14px 0 0; }
+  </style>
+</head>
+<body>
+  <div class="scroll">
+    <h1 id="screenTitle">Home</h1>
+    <p class="sub" id="screenSub">Native Liquid Glass tab bar, rendered by Stay Liquid.</p>
+
+    <div class="card">
+      <h2>True Native Liquid Glass</h2>
+      <p>The bar below is a real UIKit component sitting on top of the webview. Light from this colorful content refracts through the glass — something CSS alone can't reproduce.</p>
+      <span class="pill" id="status">Detecting platform…</span>
+    </div>
+    <div class="card">
+      <h2>Scroll me</h2>
+      <p>As content slides under the bar you can see the live blur and refraction update in real time.</p>
+    </div>
+    <div class="card">
+      <h2>One API call</h2>
+      <p>TabsBar.configure() with your items and SF Symbols — events flow straight back into your Ionic / Capacitor router.</p>
+    </div>
+    <div class="card">
+      <h2>Tap a tab</h2>
+      <p>The title above updates from the native selection event.</p>
+    </div>
+  </div>
+
+  <script>
+    const statusEl = document.getElementById('status');
+    window.addEventListener('error', (e) => { statusEl.textContent = 'JS error: ' + e.message; });
+    window.addEventListener('unhandledrejection', (e) => { statusEl.textContent = 'Rejected: ' + (e.reason && e.reason.message ? e.reason.message : e.reason); });
+
+    (async () => {
+      const titleEl = document.getElementById('screenTitle');
+      const subEl = document.getElementById('screenSub');
+      const Cap = window.Capacitor;
+
+      if (!Cap || !Cap.isNativePlatform || !Cap.isNativePlatform()) {
+        statusEl.textContent = 'Web preview (' + (Cap ? Cap.getPlatform() : 'no Capacitor') + ') — native bar shows on iOS 26+';
+        return;
+      }
+
+      const TabsBar = (Cap.Plugins && Cap.Plugins.TabsBar) || Cap.registerPlugin('TabsBar');
+      const labels = { home: 'Home', new: 'New', calendar: 'Calendar', data: 'Data', profile: 'Profile' };
+
+      try {
+        await TabsBar.configure({
+          visible: true,
+          initialId: 'home',
+          selectedIconColor: '#FFFFFF',
+          items: [
+            { id: 'home', title: 'Home', systemIcon: 'house.fill' },
+            { id: 'new', title: 'New', systemIcon: 'sparkles' },
+            { id: 'calendar', title: 'Calendar', systemIcon: 'calendar' },
+            { id: 'data', title: 'Data', systemIcon: 'chart.bar.fill', badge: 3 },
+            { id: 'profile', title: 'Profile', systemIcon: 'person.crop.circle' }
+          ]
+        });
+        statusEl.textContent = 'Native Liquid Glass bar active';
+
+        TabsBar.addListener('selected', (e) => {
+          const id = e && e.id;
+          if (labels[id]) {
+            titleEl.textContent = labels[id];
+            subEl.textContent = 'You selected the "' + labels[id] + '" tab.';
+          }
+        });
+      } catch (err) {
+        statusEl.textContent = 'Error: ' + (err && err.message ? err.message : err);
+      }
+    })();
+  </script>
+</body>
+</html>
